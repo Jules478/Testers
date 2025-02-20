@@ -768,4 +768,4 @@ echo -e "${PURPLE}
 ----------------------------------------
 ${RESET}"
 
-rm -rf julestestinfile julestestoutfile julestestoutfile2 julestestfile ../julestestexe julestestdir/julestestexe julestestexe.c script.sh julestestdir/ ls_before ls_after pname
+rm -rf julestestinfile julestestoutfile julestestoutfile2 julestestfile ../julestestexe julestestdir/julestestexe julestestexe.c script.sh julestestdir/ ls_before ls_after pname julestestexit
