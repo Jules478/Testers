@@ -192,36 +192,36 @@ echo -e "${PURPLE}
 ${RESET}"
 
 
-bash -c '
-GREEN="\e[1;32m"
-PURPLE="\e[1;35m"
-RED="\e[1;31m"
-RESET="\033[0m"
+bash -c "
+GREEN='\e[1;32m'
+PURPLE='\e[1;35m'
+RED='\e[1;31m'
+RESET='\033[0m'
 VALGRIND='valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all '
 PROGRAM='./pipex'
 unset PATH
-/bin/echo -e "${PURPLE}
+/bin/echo -e '${PURPLE}
 Unset Path Test
 
-${RESET}"
+${RESET}'
 /bin/echo -n > julestestoutfile
 /bin/echo -n > julestestfile
 /bin/echo -n > julestestexit
 /bin/${VALGRIND}./${PROGRAM} julestestinfile cat cat julestestoutfile | /bin/echo $? > julestestexit
 < julestestinfile cat | cat > julestestfile | /bin/echo $? >> julestestexit
 if [ ! -s julestestoutfile ]; then
-    /bin/echo -e "${GREEN}\nOutput Correct\n${RESET}"
+    /bin/echo -e '${GREEN}\nOutput Correct\n${RESET}'
 else
-    /bin/echo -e "${RED}\nOutput Incorrect\n${RESET}"
+    /bin/echo -e '${RED}\nOutput Incorrect\n${RESET}'
 fi
-if diff <(sed -n '1p' julestestexit) <(sed -n '2p' julestestexit); then
-    /bin/echo -e "${GREEN}\nExit Code Correct\n${RESET}"
+if /bin/diff <(/bin/sed -n '1p' julestestexit) <(/bin/sed -n '2p' julestestexit); then
+    /bin/echo -e '${GREEN}\nExit Code Correct\n${RESET}'
 else
-    /bin/echo -e "${RED}\nExit Code Incorrect\n${RESET}"
+    /bin/echo -e '${RED}\nExit Code Incorrect\n${RESET}'
 fi
-/bin/echo -e "${PURPLE}
+/bin/echo -e '${PURPLE}
 ----------------------------------------
-${RESET}"'
+${RESET}'"
 
 
 echo -n > julestestoutfile
