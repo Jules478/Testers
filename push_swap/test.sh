@@ -23,7 +23,7 @@ echo -e "----- TRACE BEGINS -----\n" >> push_swap_trace
 
 echo -e "${PURPLE}--- ${WHITE}Basic Tests${PURPLE} ---\n${RESET}"
 
-./push_swap > julestestout
+./push_swap > julestestout 2> /dev/null
 echo -n > julestestfile
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
@@ -31,7 +31,7 @@ else
 	echo -n "❌"
 	echo -e "No arguments did not return control\n" >> push_swap_trace
 fi
-./push_swap "1 2 3 4 5" > julestestout
+./push_swap "1 2 3 4 5" > julestestout 2> /dev/null
 echo -n > julestestfile
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
@@ -39,7 +39,7 @@ else
 	echo -n "❌"
 	echo -e "Arguments did not return control\n1 2 3 4 5\n" >> push_swap_trace
 fi
-./push_swap "-5 -4 -3 -2 -1 0 1 2 3 4 5" > julestestout
+./push_swap "-5 -4 -3 -2 -1 0 1 2 3 4 5" > julestestout 2> /dev/null
 echo -n > julestestfile
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
@@ -48,21 +48,21 @@ else
 	echo -e "Arguments did not return control:\n-5 -4 -3 -2 -1 0 1 2 3 4 5\n" >> push_swap_trace
 fi
 echo -e "Error" > julestestfile
-./push_swap "numbers" 2> julestestout
+./push_swap "numbers" 2> julestestout 1> /dev/null
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
 else
 	echo -n "❌"
 	echo -e "Program did not return Error:\nnumbers\n" >> push_swap_trace
 fi
-./push_swap "5 -2 - 0 +2 +" 2> julestestout
+./push_swap "5 -2 - 0 +2 +" 2> julestestout 1> /dev/null
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
 else
 	echo -n "❌"
 	echo -e "Program did not return Error:\n5 -2 - 0 +2 +\n" >> push_swap_trace
 fi
-./push_swap "5 3 2 1 5 4" 2> julestestout
+./push_swap "5 3 2 1 5 4" 2> julestestout 1> /dev/null
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "✅"
 else
@@ -72,7 +72,7 @@ fi
 
 # Check push_swap actually runs when it should
 
-./push_swap "-5 5 -4 4 -3 3 -2 2 -1 1 0" > julestestout
+./push_swap "-5 5 -4 4 -3 3 -2 2 -1 1 0" 1> julestestout 2> /dev/null
 if diff julestestout julestestfile > /dev/null; then
 	echo -n "❌"
 	echo -e "Program did not run:\n-5 5 -4 4 -3 3 -2 2 -1 1 0\n" >> push_swap_trace
@@ -86,9 +86,8 @@ TOTAL=0
 RUNS=500
 echo -e "${PURPLE}--- ${WHITE} Target Operations For 100 Arguments: ${PURPLE}700 ---\n${RESET}"
 for i in $(seq 1 "$RUNS"); do
-    ARGS=$(shuf -i 1-10000 -n 100 | tr '\n' ' ')
+    ARGS=$(shuf -i 1-10000 -n 100 2> /dev/null | tr '\n' ' ')
     RESULT=$(./push_swap $ARGS | wc -l)
-
     if [ "$RESULT" -gt "$MAX" ]; then
         MAX=$RESULT
     fi
@@ -120,7 +119,7 @@ RUNS=5
 echo -e "${PURPLE}\n--- ${WHITE}Target Operations For 500 Arguments: ${PURPLE}5500 ---\n${RESET}"
 for i in $(seq 1 "$RUNS"); do
     ARGS=$(shuf -i 1-10000 -n 500 | tr '\n' ' ')
-    RESULT=$(./push_swap $ARGS | wc -l)
+    RESULT=$(./push_swap $ARGS 2> /dev/null | wc -l)
 
     if [ "$RESULT" -gt "$MAX" ]; then
         MAX=$RESULT
@@ -158,7 +157,7 @@ else
 	chmod 777 checker_linux
 	for i in $(seq 1 10); do
 		ARGS=$(shuf -i 1-10000 -n 100 | tr '\n' ' ');
-		./push_swap $ARGS | ./checker_linux $ARGS > julestestout;
+		./push_swap $ARGS | ./checker_linux $ARGS 1> julestestout 2> /dev/null;
 		if diff julestestout julestestfile > /dev/null; then
 			echo -n "✅"
 		else
@@ -172,7 +171,7 @@ else
 	echo -e "${PURPLE}\n\n--- Checker 500 ---\n${RESET}"
 	for i in $(seq 1 10); do
 		ARGS=$(shuf -i 1-10000 -n 500 | tr '\n' ' ');
-		./push_swap $ARGS | ./checker_linux $ARGS > julestestout;
+		./push_swap $ARGS | ./checker_linux $ARGS 1> julestestout 2> /dev/null;
 		if diff julestestout julestestfile > /dev/null; then
 			echo -n "✅"
 		else
@@ -282,7 +281,7 @@ echo -e "OK" > julestestfile
 echo -e "KO" > julestestfile2
 echo -e "Error" > julestestfile3
 echo -n > julestestfile4
-./checker "5 3 4 2 1" <<EOF > julesbonusout
+./checker "5 3 4 2 1" <<EOF 1> julesbonusout 2> /dev/null
 pb
 pb
 ra
@@ -300,7 +299,7 @@ else
 	echo -n "❌"
 	echo -e "Checker failed with these arguments:\n5 3 4 2 1\nWith these commands:\npb\npb\nra\nsa\nrra\npa\nra\nra\npa\nra" >> push_swap_trace
 fi
-./checker "1 2 3 4 5" <<EOF > julesbonusout
+./checker "1 2 3 4 5" <<EOF 1> julesbonusout 2> /dev/null
 EOF
 if diff julesbonusout julestestfile > /dev/null; then
 	echo -n "✅"
@@ -308,28 +307,28 @@ else
 	echo -n "❌"
 	echo -e "Checker failed with these arguments:\n1 2 3 4 5\n" >> push_swap_trace
 fi
-./checker "1 2 3 4 5 5" > julesbonusout
+./checker "1 2 3 4 5 5" 2> julesbonusout 1> /dev/null
 if diff julesbonusout julestestfile3 > /dev/null; then
 	echo -n "✅"
 else
 	echo -n "❌"
 	echo -e "Checker failed with these arguments:\n1 2 3 4 5 5\n" >> push_swap_trace
 fi
-./checker "1 2 3 4 5 2147483648" > julesbonusout
+./checker "1 2 3 4 5 2147483648" 2> julesbonusout 1> /dev/null
 if diff julesbonusout julestestfile3 > /dev/null; then
 	echo -n "✅"
 else
 	echo -n "❌"
 	echo -e "Checker failed with these arguments:\n1 2 3 4 5 2147483648\n" >> push_swap_trace
 fi
-./checker "1 2 3 4 5 q" > julesbonusout
+./checker "1 2 3 4 5 q" 2> julesbonusout 1> /dev/null
 if diff julesbonusout julestestfile3 > /dev/null; then
 	echo -n "✅"
 else
 	echo -n "❌"
 	echo -e "Checker failed with these arguments:\n1 2 3 4 5 q\n" >> push_swap_trace
 fi
-./checker "1" <<EOF > julesbonusout
+./checker "1" <<EOF 1> julesbonusout 2> /dev/null
 EOF
 if diff julesbonusout julestestfile > /dev/null; then
 	echo -n "✅"
@@ -345,7 +344,7 @@ rm julesbonusout julestestfile2 julestestfile3 julestestfile4
 echo -e "${PURPLE}\n\n--- Bonus 100 ---\n${RESET}"
 for i in $(seq 1 10); do
 	ARGS=$(shuf -i 1-10000 -n 100 | tr '\n' ' ');
-	./push_swap $ARGS | ./checker $ARGS > julestestout;
+	./push_swap $ARGS | ./checker $ARGS 1> julestestout 2> /dev/null;
 	if diff julestestout julestestfile > /dev/null; then
 		echo -n "✅"
 	else
@@ -359,7 +358,7 @@ done
 echo -e "${PURPLE}\n\n--- Bonus 500 ---\n${RESET}"
 for i in $(seq 1 10); do
 	ARGS=$(shuf -i 1-10000 -n 500 | tr '\n' ' ');
-	./push_swap $ARGS | ./checker $ARGS > julestestout;
+	./push_swap $ARGS | ./checker $ARGS 1> julestestout 2> /dev/null;
 	if diff julestestout julestestfile > /dev/null; then
 		echo -n "✅"
 	else
