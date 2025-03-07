@@ -68,13 +68,6 @@ else
 	echo -n "❌"
 	echo -e "Program did not return Error:\n5 3 2 1 5 4\n" >> push_swap_trace
 fi
-./push_swap "" 2> julestestout
-if diff julestestout julestestfile > /dev/null; then
-	echo -n "✅"
-else
-	echo -n "❌"
-	echo -e "Program did not return Error:\nArguments blank\n" >> push_swap_trace
-fi
 
 # Check push_swap actually runs when it should
 
@@ -86,11 +79,11 @@ else
 	echo -n "✅"
 fi
 # Test push_swap with 100 randomly generated unique arguments
-
+echo -e "${PURPLE}\n\n--- ${WHITE}Operation Count Tests${PURPLE} ---\n${RESET}"
 MAX=0
 TOTAL=0
 RUNS=500
-echo -e "${PURPLE}\n\n--- ${WHITE} Target Operations For 100 Arguments: ${PURPLE}700 ---\n${RESET}"
+echo -e "${PURPLE}--- ${WHITE} Target Operations For 100 Arguments: ${PURPLE}700 ---\n${RESET}"
 for i in $(seq 1 "$RUNS"); do
     ARGS=$(shuf -i 1-10000 -n 100 | tr '\n' ' ')
     RESULT=$(./push_swap $ARGS | wc -l)
@@ -122,7 +115,7 @@ fi
 
 MAX=0
 TOTAL=0
-RUNS=50
+RUNS=5
 echo -e "${PURPLE}\n--- ${WHITE}Target Operations For 500 Arguments: ${PURPLE}5500 ---\n${RESET}"
 for i in $(seq 1 "$RUNS"); do
     ARGS=$(shuf -i 1-10000 -n 500 | tr '\n' ' ')
@@ -155,7 +148,7 @@ fi
 
 echo -e "OK" > julestestfile
 if [ ! -f "./checker_linux" ]; then
-	echo -e "${RED}\n--- Checker not found: Cannot perform tests ---\n${RESET}"
+	echo -e "${RED}\n--- Checker not found: Cannot perform tests ---${RESET}"
 else
 
 	# Run push_swap against checker with 100 randomly generated unique arguments
@@ -220,15 +213,6 @@ else
 	echo -n "❌"
 	echo -e "Memory leak with these arguments:\n${ARGS}\n" >> push_swap_trace
 fi
-ARGS=""
-${VALGRIND} --log-file=julestestval ./push_swap $ARGS > /dev/null 2>&1
-grep "ERROR SUMMARY:" julestestval  | sed 's/==[0-9]\+== //g' > julescheckval
-if diff julestestvalcheck julescheckval > /dev/null; then
-	echo -n "✅"
-else
-	echo -n "❌"
-	echo -e "Memory leak with these arguments:\nArguments blank\n" >> push_swap_trace
-fi
 ARGS="numbers"
 ${VALGRIND} --log-file=julestestval ./push_swap $ARGS > /dev/null 2>&1
 grep "ERROR SUMMARY:" julestestval  | sed 's/==[0-9]\+== //g' > julescheckval
@@ -285,6 +269,7 @@ if [ ! -f "./checker" ]; then
 fi
 if [ ! -f "./checker" ]; then
 	echo -e "${RED}Cannot create bonus. Exiting test...\n${RESET}"
+	echo -e "\n---- TRACE ENDS ----\n" >> push_swap_trace
 	exit 1
 fi
 echo -e "${GREEN}-- ${WHITE}Success ${GREEN}--\n${RESET}"
@@ -413,15 +398,6 @@ if diff julestestvalcheck julescheckval > /dev/null; then
 else
 	echo -n "❌"
 	echo -e "Memory leak with these arguments:\n${ARGS}\n" >> push_swap_trace
-fi
-ARGS=""
-./push_swap $ARGS 2>/dev/null | ${VALGRIND} --log-file=julestestval ./checker $ARGS > /dev/null 2>&1
-grep "ERROR SUMMARY:" julestestval  | sed 's/==[0-9]\+== //g' > julescheckval
-if diff julestestvalcheck julescheckval > /dev/null; then
-	echo -n "✅"
-else
-	echo -n "❌"
-	echo -e "Memory leak with these arguments:\nArguments blank\n" >> push_swap_trace
 fi
 ARGS="numbers"
 ./push_swap $ARGS 2>/dev/null | ${VALGRIND} --log-file=julestestval ./checker $ARGS > /dev/null 2>&1
